@@ -1,0 +1,120 @@
+ltm pool /Legacy-CSC/Remedy-Leverage-app_pool_2 {
+    active-member-cnt 0
+    connq-all.age-edm 0
+    connq-all.age-ema 0
+    connq-all.age-head 0
+    connq-all.age-max 0
+    connq-all.depth 0
+    connq-all.serviced 0
+    connq.age-edm 0
+    connq.age-ema 0
+    connq.age-head 0
+    connq.age-max 0
+    connq.depth 0
+    connq.serviced 0
+    cur-sessions 0
+    min-active-members 1
+    monitor-rule tcp
+    name /Legacy-CSC/Remedy-Leverage-app_pool_2
+    serverside.bits-in 0
+    serverside.bits-out 0
+    serverside.cur-conns 0
+    serverside.max-conns 0
+    serverside.pkts-in 0
+    serverside.pkts-out 0
+    serverside.tot-conns 20
+    status.availability-state offlinex
+    status.enabled-state enabled
+    status.status-reason The children pool member(s) are down
+    tot-requests 0
+}
+ltm pool /Legacy-CSC/manulifesd.aust.csc.com-pool {
+    active-member-cnt 0
+    connq-all.age-edm 0
+    connq-all.age-ema 0
+    connq-all.age-head 0
+    connq-all.age-max 0
+    connq-all.depth 0
+    connq-all.serviced 0
+    connq.age-edm 0
+    connq.age-ema 0
+    connq.age-head 0
+    connq.age-max 0
+    connq.depth 0
+    connq.serviced 0
+    cur-sessions 0
+    min-active-members 0
+    monitor-rule tcp
+    name /Legacy-CSC/manulifesd.aust.csc.com-pool
+    serverside.bits-in 0
+    serverside.bits-out 0
+    serverside.cur-conns 0
+    serverside.max-conns 0
+    serverside.pkts-in 0
+    serverside.pkts-out 0
+    serverside.tot-conns 0
+    status.availability-state offline
+    status.enabled-state enabled
+    status.status-reason The children pool member(s) are down
+    tot-requests 0
+}
+ltm pool /Legacy-CSC/reportingdr_pool {
+    active-member-cnt 0
+    connq-all.age-edm 0
+    connq-all.age-ema 0
+    connq-all.age-head 0
+    connq-all.age-max 0
+    connq-all.depth 0
+    connq-all.serviced 0
+    connq.age-edm 0
+    connq.age-ema 0
+    connq.age-head 0
+    connq.age-max 0
+    connq.depth 0
+    connq.serviced 0
+    cur-sessions 0
+    min-active-members 0
+    monitor-rule http
+    name /Legacy-CSC/reportingdr_pool
+    serverside.bits-in 0
+    serverside.bits-out 0
+    serverside.cur-conns 0
+    serverside.max-conns 0
+    serverside.pkts-in 0
+    serverside.pkts-out 0
+    serverside.tot-conns 0
+    status.availability-state offline
+    status.enabled-state enabled
+    status.status-reason The children pool member(s) are down
+    tot-requests 0
+}
+ltm pool /Legacy-CSC/servicedesk.aust.csc.com-pool {
+    active-member-cnt 0
+    connq-all.age-edm 0
+    connq-all.age-ema 0
+    connq-all.age-head 0
+    connq-all.age-max 0
+    connq-all.depth 0
+    connq-all.serviced 0
+    connq.age-edm 0
+    connq.age-ema 0
+    connq.age-head 0
+    connq.age-max 0
+    connq.depth 0
+    connq.serviced 0
+    cur-sessions 0
+    min-active-members 0
+    monitor-rule tcp
+    name /Legacy-CSC/servicedesk.aust.csc.com-pool
+    serverside.bits-in 0
+    serverside.bits-out 0
+    serverside.cur-conns 0
+    serverside.max-conns 0
+    serverside.pkts-in 0
+    serverside.pkts-out 0
+    serverside.tot-conns 0
+    status.availability-state offline
+    status.enabled-state enabled
+    status.status-reason The children pool member(s) are down
+    tot-requests 0
+}
