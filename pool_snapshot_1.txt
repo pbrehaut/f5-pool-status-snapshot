@@ -21,9 +21,9 @@ ltm pool /Legacy-CSC/Remedy-Leverage-app_pool_2 {
     serverside.cur-conns 0
     serverside.max-conns 0
     serverside.pkts-in 0
-    serverside.pkts-out 0
-    serverside.tot-conns 20
-    status.availability-state offlinex
+    serverside.pkts-out 50
+    serverside.tot-conns 0
+    status.availability-state offline
     status.enabled-state enabled
     status.status-reason The children pool member(s) are down
     tot-requests 0

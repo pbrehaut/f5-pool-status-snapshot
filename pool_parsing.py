@@ -74,6 +74,86 @@ def parse_all_snapshot_files():
     return all_data
 
 
+def filter_pools_by_condition(pool_data, filter_key, filter_value):
+    """Filter pools that have a specific key-value pair.
+
+    Args:
+        pool_data: Dictionary of pool data
+        filter_key: Key to check for
+        filter_value: Value that the key should have
+
+    Returns:
+        Dictionary containing only pools that match the condition
+    """
+    filtered_pools = {}
+
+    for pool_name, pool_info in pool_data.items():
+        if pool_info.get(filter_key) == filter_value:
+            filtered_pools[pool_name] = pool_info
+
+    return filtered_pools
+
+
+def check_unchanged_values(data1, data2, filename1, filename2, filter_key=None, filter_value=None, keys_to_check=None):
+    """Check for unchanged values between two pool datasets, with optional filtering.
+
+    Args:
+        data1: First pool data dictionary
+        data2: Second pool data dictionary
+        filename1: Name of first file
+        filename2: Name of second file
+        filter_key: Key to filter pools by (optional)
+        filter_value: Value to filter pools by (optional)
+        keys_to_check: List of specific keys to compare. If None, compares all keys.
+
+    Returns:
+        Dictionary of pools with unchanged values
+    """
+    # Apply filtering if specified
+    if filter_key is not None and filter_value is not None:
+        print('Filtering pools where {} = {}'.format(filter_key, filter_value))
+        data1_filtered = filter_pools_by_condition(data1, filter_key, filter_value)
+        data2_filtered = filter_pools_by_condition(data2, filter_key, filter_value)
+        print('Found {} pools in {} and {} pools in {} matching the filter'.format(
+            len(data1_filtered), os.path.basename(filename1),
+            len(data2_filtered), os.path.basename(filename2)))
+    else:
+        data1_filtered = data1
+        data2_filtered = data2
+
+    unchanged_values = {}
+
+    # Get pools that exist in both filtered datasets
+    common_pools = set(data1_filtered.keys()) & set(data2_filtered.keys())
+
+    for pool_name in common_pools:
+        pool1_data = data1_filtered[pool_name]
+        pool2_data = data2_filtered[pool_name]
+
+        # Determine which keys to check
+        if keys_to_check is None:
+            # Get all unique keys from both pool records
+            keys_to_compare = set(pool1_data.keys()) | set(pool2_data.keys())
+        else:
+            # Only check specified keys
+            keys_to_compare = set(keys_to_check)
+
+        unchanged_attrs = {}
+
+        for key in keys_to_compare:
+            value1 = pool1_data.get(key, '<missing>')
+            value2 = pool2_data.get(key, '<missing>')
+
+            # Check if values are the same and both exist
+            if value1 == value2 and value1 != '<missing>':
+                unchanged_attrs[key] = value1
+
+        if unchanged_attrs:
+            unchanged_values[pool_name] = unchanged_attrs
+
+    return unchanged_values
+
+
 def compare_pool_data(data1, data2, filename1, filename2, keys_to_check=None):
     """Compare two pool data dictionaries and return differences.
 
@@ -188,6 +268,25 @@ def display_differences(differences, filename1, filename2):
                 ))
 
 
+def display_unchanged_values(unchanged_values, filename1, filename2):
+    """Display the unchanged values in a readable format."""
+    if not unchanged_values:
+        print('No unchanged values found between {} and {}'.format(
+            os.path.basename(filename1), os.path.basename(filename2)))
+        return
+
+    print('\nUnchanged values between {} and {}:'.format(
+        os.path.basename(filename1), os.path.basename(filename2)))
+    print('=' * 60)
+
+    for pool_name, unchanged_attrs in unchanged_values.items():
+        print('\nPool: {}'.format(pool_name))
+        print('-' * (len(pool_name) + 6))
+
+        for key, value in unchanged_attrs.items():
+            print('  {}: {}'.format(key, value))
+
+
 def main():
     import sys
 
@@ -205,10 +304,12 @@ def main():
 
     # Optional: specify which keys to check for differences
     # Example usage with specific keys:
-    # keys_to_check = ['status.availability-state', 'status.enabled-state', 'active-member-cnt']
+    # keys_to_check = ['status.availability-state', 'serverside.tot-conns']
 
     # For now, check all keys (default behaviour)
-    keys_to_check = ['status.availability-state', 'serverside.tot-conns']
+    keys_to_check_changed = ['status.availability-state']
+    keys_to_check_changed = None
+    keys_to_check_unchanged = ['serverside.tot-conns']
 
     # Compare the selected files
     differences = compare_pool_data(
@@ -216,11 +317,25 @@ def main():
         all_pool_data[file2],
         file1,
         file2,
-        keys_to_check
+        keys_to_check_changed
     )
 
     # Display the results
     display_differences(differences, file1, file2)
+
+    # Example: Check for unchanged values where status.availability-state is 'available'
+    print('\n' + '=' * 60)
+    unchanged = check_unchanged_values(
+        all_pool_data[file1],
+        all_pool_data[file2],
+        file1,
+        file2,
+        filter_key='status.availability-state',
+        filter_value='offline',
+        keys_to_check=keys_to_check_unchanged
+    )
+
+    display_unchanged_values(unchanged, file1, file2)
 
     return all_pool_data
 
