@@ -66,10 +66,10 @@ def parse_all_snapshot_files():
 
     for file_path in snapshot_files:
         if os.path.isfile(file_path):
-            print('Parsing {}...'.format(file_path))
+            print('Parsing {0}...'.format(file_path))
             pools = parse_pool_file(file_path)
             all_data[file_path] = pools
-            print('Found {} pools in {}'.format(len(pools), file_path))
+            print('Found {0} pools in {1}'.format(len(pools), file_path))
 
     return all_data
 
@@ -111,10 +111,10 @@ def check_unchanged_values(data1, data2, filename1, filename2, filter_key=None, 
     """
     # Apply filtering if specified
     if filter_key is not None and filter_value is not None:
-        print('Filtering pools where {} = {}'.format(filter_key, filter_value))
+        print('Filtering pools where {0} = {1}'.format(filter_key, filter_value))
         data1_filtered = filter_pools_by_condition(data1, filter_key, filter_value)
         data2_filtered = filter_pools_by_condition(data2, filter_key, filter_value)
-        print('Found {} pools in {} and {} pools in {} matching the filter'.format(
+        print('Found {0} pools in {1} and {2} pools in {3} matching the filter'.format(
             len(data1_filtered), os.path.basename(filename1),
             len(data2_filtered), os.path.basename(filename2)))
     else:
@@ -174,9 +174,9 @@ def compare_pool_data(data1, data2, filename1, filename2, keys_to_check=None):
 
         # Check if pool exists in both files
         if pool_name not in data1:
-            pool_diffs['pool_status'] = 'Missing in {}'.format(filename1)
+            pool_diffs['pool_status'] = 'Missing in {0}'.format(filename1)
         elif pool_name not in data2:
-            pool_diffs['pool_status'] = 'Missing in {}'.format(filename2)
+            pool_diffs['pool_status'] = 'Missing in {0}'.format(filename2)
         else:
             # Compare attributes for this pool
             pool1_data = data1[pool_name]
@@ -216,17 +216,17 @@ def select_files_for_comparison(all_pool_data):
 
     print('\nAvailable files:')
     for i, filename in enumerate(filenames):
-        print('{}. {}'.format(i + 1, os.path.basename(filename)))
+        print('{0}. {1}'.format(i + 1, os.path.basename(filename)))
 
     print()
 
     try:
         if sys.version_info[0] >= 3:
-            choice1 = input('Select first file (1-{}): '.format(len(filenames)))
-            choice2 = input('Select second file (1-{}): '.format(len(filenames)))
+            choice1 = input('Select first file (1-{0}): '.format(len(filenames)))
+            choice2 = input('Select second file (1-{0}): '.format(len(filenames)))
         else:
-            choice1 = raw_input('Select first file (1-{}): '.format(len(filenames)))
-            choice2 = raw_input('Select second file (1-{}): '.format(len(filenames)))
+            choice1 = raw_input('Select first file (1-{0}): '.format(len(filenames)))
+            choice2 = raw_input('Select second file (1-{0}): '.format(len(filenames)))
 
         choice1 = int(choice1) - 1
         choice2 = int(choice2) - 1
@@ -245,23 +245,23 @@ def select_files_for_comparison(all_pool_data):
 def display_differences(differences, filename1, filename2):
     """Display the differences in a readable format."""
     if not differences:
-        print('No differences found between {} and {}'.format(
+        print('No differences found between {0} and {1}'.format(
             os.path.basename(filename1), os.path.basename(filename2)))
         return
 
-    print('\nDifferences between {} and {}:'.format(
+    print('\nDifferences between {0} and {1}:'.format(
         os.path.basename(filename1), os.path.basename(filename2)))
     print('=' * 60)
 
     for pool_name, pool_diffs in differences.items():
-        print('\nPool: {}'.format(pool_name))
+        print('\nPool: {0}'.format(pool_name))
         print('-' * (len(pool_name) + 6))
 
         for key, value_info in pool_diffs.items():
             if key == 'pool_status':
-                print('  {}'.format(value_info))
+                print('  {0}'.format(value_info))
             else:
-                print('  {}: {} -> {}'.format(
+                print('  {0}: {1} -> {2}'.format(
                     key,
                     value_info.get(filename1, '<missing>'),
                     value_info.get(filename2, '<missing>')
@@ -271,20 +271,20 @@ def display_differences(differences, filename1, filename2):
 def display_unchanged_values(unchanged_values, filename1, filename2):
     """Display the unchanged values in a readable format."""
     if not unchanged_values:
-        print('No unchanged values found between {} and {}'.format(
+        print('No unchanged values found between {0} and {1}'.format(
             os.path.basename(filename1), os.path.basename(filename2)))
         return
 
-    print('\nUnchanged values between {} and {}:'.format(
+    print('\nUnchanged values between {0} and {1}:'.format(
         os.path.basename(filename1), os.path.basename(filename2)))
     print('=' * 60)
 
     for pool_name, unchanged_attrs in unchanged_values.items():
-        print('\nPool: {}'.format(pool_name))
+        print('\nPool: {0}'.format(pool_name))
         print('-' * (len(pool_name) + 6))
 
         for key, value in unchanged_attrs.items():
-            print('  {}: {}'.format(key, value))
+            print('  {0}: {1}'.format(key, value))
 
 
 def main():
@@ -308,7 +308,6 @@ def main():
 
     # For now, check all keys (default behaviour)
     keys_to_check_changed = ['status.availability-state']
-    keys_to_check_changed = None
     keys_to_check_unchanged = ['serverside.tot-conns']
 
     # Compare the selected files
@@ -331,7 +330,7 @@ def main():
         file1,
         file2,
         filter_key='status.availability-state',
-        filter_value='offline',
+        filter_value='available',
         keys_to_check=keys_to_check_unchanged
     )
 
